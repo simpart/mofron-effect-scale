@@ -11,11 +11,7 @@ mf.effect.Scale = class extends mofron.Effect {
         try {
             super();
             this.name('Scale');
-            this.prmMap(['x_value', 'y_value', 'z_value']);
-            
-            this.x_value([0, 0]);
-            this.y_value([0, 0]);
-            this.z_value([0, 0]);
+            this.prmMap('value');
             
             this.prmOpt(po, p2, p3);
         } catch (e) {
@@ -24,13 +20,14 @@ mf.effect.Scale = class extends mofron.Effect {
         }
     }
     
-    contents (eid, cmp) {
+    contents (cmp) {
         try {
+            let val = this.value();
             cmp.adom().style({
-                '-webkit-transform'  : 'scale3d('+ this.x_value()[eid] + ',' + this.y_value()[eid] + ',' + this.z_value()[eid] + ')',
-                '-moz-transition'    : 'scale3d('+ this.x_value()[eid] + ',' + this.y_value()[eid] + ',' + this.z_value()[eid] + ')',
-                '-o-transition'      : 'scale3d('+ this.x_value()[eid] + ',' + this.y_value()[eid] + ',' + this.z_value()[eid] + ')',
-                'transform'          : 'scale3d('+ this.x_value()[eid] + ',' + this.y_value()[eid] + ',' + this.z_value()[eid] + ')'
+                '-webkit-transform'  : 'scale3d('+ val[0] + ',' + val[1] + ',' + val[2] + ')',
+                '-moz-transition'    : 'scale3d('+ val[0] + ',' + val[1] + ',' + val[2] + ')',
+                '-o-transition'      : 'scale3d('+ val[0] + ',' + val[1] + ',' + val[2] + ')',
+                'transform'          : 'scale3d('+ val[0] + ',' + val[1] + ',' + val[2] + ')'
             });
         } catch (e) {
             console.error(e.stack);
@@ -38,22 +35,17 @@ mf.effect.Scale = class extends mofron.Effect {
         }
     }
     
-    x_value (prm) {
-        try { return this.execConfig('x_value', 'number', prm); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    y_value (prm) {
-        try { return this.execConfig('y_value', 'number', prm); } catch (e) {
-            console.error(e.stack);
-            throw e;
-        }
-    }
-    
-    z_value (prm) {
-        try { return this.execConfig('z_value', 'number', prm); } catch (e) {
+    value (x, y, z) {
+        try {
+            if ( (undefined === x) &&
+                 (undefined === y) &&
+                 (undefined === z) ) {
+                return [this.getMember('x_value'), this.getMember('y_value'), this.getMember('z_value')];
+            }
+            this.member('x_value', 'number', x, 0);
+            this.member('y_value', 'number', y, 0);
+            this.member('z_value', 'number', z, 0);
+        } catch (e) {
             console.error(e.stack);
             throw e;
         }
